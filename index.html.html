@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه سلامت صبا | نوبت دهی هوشمند پزشکان</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* متغیرهای رنگ پزشکی */
+        :root {
+            --medical-blue: #0ea5e9;
+            --medical-dark-blue: #0369a1;
+            --medical-light-blue: #7dd3fc;
+            --medical-teal: #14b8a6;
+            --medical-purple: #8b5cf6;
+            --medical-pink: #ec4899;
+            --medical-green: #10b981;
+            --medical-red: #ef4444;
+            --medical-yellow: #f59e0b;
+            --medical-gray: #64748b;
+            --medical-light: #f8fafc;
+            --medical-white: #ffffff;
+            --medical-dark: #0f172a;
+            
+            --gradient-medical: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 50%, #8b5cf6 100%);
+            --gradient-blue: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+            --gradient-teal: linear-gradient(135deg, #14b8a6 0%, #2dd4bf 100%);
+            --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            
+            --shadow-sm: 0 2px 8px rgba(14, 165, 233, 0.1);
+            --shadow-md: 0 8px 24px rgba(14, 165, 233, 0.15);
+            --shadow-lg: 0 16px 40px rgba(14, 165, 233, 0.2);
+            --shadow-xl: 0 24px 60px rgba(14, 165, 233, 0.25);
+            --shadow-2xl: 0 32px 80px rgba(14, 165, 233, 0.3);
+            
+            --radius-sm: 12px;
+            --radius: 20px;
+            --radius-lg: 28px;
+            --radius-xl: 36px;
+            --radius-2xl: 50px;
+        }
+
+        /* Reset و تنظیمات پایه */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 50%, #f0fdfa 100%);
+            color: var(--medical-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* انیمیشن‌های پزشکی */
+        @keyframes pulseMedical {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes floatMedical {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-15px) rotate(2deg); }
+            66% { transform: translateY(8px) rotate(-2deg); }
+        }
+
+        @keyframes bounceMedical {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes rotateMedical {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-heartbeat { animation: heartbeat 1.5s ease-in-out infinite; }
+        .animate-float { animation: floatMedical 6s ease-in-out infinite; }
+        .animate-bounce { animation: bounceMedical 3s ease-in-out infinite; }
+        .animate-pulse { animation: pulseMedical 2s ease-in-out infinite; }
+        .animate-rotate { animation: rotateMedical 20s linear infinite; }
+
+        /* ناوبری پزشکی */
+        .medical-navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(30px);
+            border-bottom: 3px solid var(--medical-light-blue);
+            box-shadow: var(--shadow-lg);
+            padding: 15px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .medical-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-icon-medical {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-medical);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .logo-text-medical h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: var(--gradient-medical);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text-medical span {
+            font-size: 0.9rem;
+            color: var(--medical-gray);
+            font-weight: 500;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .medical-nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+
+        .nav-item-medical {
+            position: relative;
+        }
+
+        .nav-link-medical {
+            padding: 12px 28px;
+            color: var(--medical-dark);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--radius);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .nav-link-medical:hover {
+            background: rgba(14, 165, 233, 0.08);
+            color: var(--medical-blue);
+            transform: translateY(-2px);
+        }
+
+        .nav-link-medical .emoji {
+            font-size: 1.3rem;
+            animation: bounceMedical 2s ease-in-out infinite;
+        }
+
+        .nav-cta-medical {
+            background: var(--gradient-medical);
+            color: white !important;
+            box-shadow: var(--shadow-md);
+            padding: 12px 32px;
+            border-radius: var(--radius);
+        }
+
+        /* هیرو پزشکی */
+        .medical-hero {
+            padding: 200px 0 120px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ecfeff 50%, #f0fdf4 100%);
+        }
+
+        .medical-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20, 184, 166, 0.15) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* المان‌های پزشکی شناور */
+        .medical-floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 3.5rem;
+            opacity: 0.15;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .element-1 { top: 20%; left: 10%; animation: floatMedical 8s ease-in-out infinite; }
+        .element-2 { top: 60%; left: 85%; animation: floatMedical 9s ease-in-out infinite reverse; }
+        .element-3 { top: 40%; left: 5%; animation: floatMedical 7s ease-in-out infinite; }
+        .element-4 { top: 80%; left: 15%; animation: floatMedical 10s ease-in-out infinite; }
+        .element-5 { top: 30%; left: 90%; animation: floatMedical 8.5s ease-in-out infinite reverse; }
+        .element-6 { top: 70%; left: 70%; animation: floatMedical 7.5s ease-in-out infinite; }
+        .element-7 { top: 15%; left: 75%; animation: floatMedical 9.5s ease-in-out infinite; }
+
+        .medical-hero-content {
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .medical-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-medical);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-lg);
+            animation: pulseMedical 2s infinite;
+        }
+
+        .medical-title {
+            font-size: 4.2rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .medical-title .emoji-large {
+            font-size: 4rem;
+            margin: 0 15px;
+            vertical-align: middle;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .medical-subtitle {
+            font-size: 1.3rem;
+            color: var(--medical-gray);
+            max-width: 800px;
+            margin: 0 auto 60px;
+            line-height: 1.8;
+        }
+
+        /* کارت جستجوی پزشکی */
+        .medical-search-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 50px;
+            box-shadow: var(--shadow-2xl);
+            border: 2px solid rgba(14, 165, 233, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .medical-search-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-medical);
+        }
+
+        .search-icon-medical {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medical-blue);
+            font-size: 1.3rem;
+            z-index: 2;
+        }
+
+        .search-input-medical {
+            width: 100%;
+            padding: 20px 70px 20px 30px;
+            border: 2px solid rgba(14, 165, 233, 0.15);
+            border-radius: var(--radius-lg);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--medical-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* دکمه‌های پزشکی */
+        .btn-medical {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 38px;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-medical .emoji {
+            font-size: 1.2rem;
+            animation: bounceMedical 2s ease-in-out infinite;
+        }
+
+        .btn-primary-medical {
+            background: var(--gradient-medical);
+            color: white;
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-primary-medical:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.4);
+        }
+
+        /* بخش چرا سامانه سلامت صبا؟ */
+        .why-choose-us {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.4s;
+            border: 2px solid rgba(14, 165, 233, 0.1);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--medical-blue);
+        }
+
+        .benefit-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 25px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
+            background: var(--gradient-medical);
+            box-shadow: var(--shadow-lg);
+            animation: pulseMedical 3s ease-in-out infinite;
+        }
+
+        /* کارت پزشک با شکلک */
+        .medical-doctor-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(14, 165, 233, 0.1);
+            position: relative;
+        }
+
+        .medical-doctor-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--medical-light-blue);
+        }
+
+        .doctor-header-medical {
+            padding: 50px 35px 35px;
+            position: relative;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+            border-bottom: 2px solid rgba(14, 165, 233, 0.1);
+        }
+
+        .doctor-emoji-avatar {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            background: var(--gradient-blue);
+            color: white;
+            border: 8px solid white;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.4s;
+        }
+
+        .medical-doctor-card:hover .doctor-emoji-avatar {
+            transform: scale(1.1);
+            border-color: var(--medical-blue);
+            box-shadow: 0 20px 50px rgba(14, 165, 233, 0.3);
+        }
+
+        .doctor-badge-medical {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            background: var(--gradient-medical);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doctor-badge-medical .emoji {
+            font-size: 1.1rem;
+        }
+
+        .status-medical {
+            position: absolute;
+            bottom: 35px;
+            right: 35px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-online { background: var(--medical-green); }
+        .status-busy { background: var(--medical-yellow); }
+
+        .doctor-info-medical {
+            padding: 30px;
+        }
+
+        .doctor-name-medical {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--medical-dark);
+            margin-bottom: 12px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .specialty-medical {
+            color: var(--medical-blue);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.15rem;
+        }
+
+        .rating-medical {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .star-medical {
+            color: #ffd700;
+            font-size: 1.3rem;
+        }
+
+        .doctor-meta-medical {
+            color: var(--medical-gray);
+            font-size: 1rem;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .doctor-price-medical {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--medical-dark-blue);
+            margin: 25px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* بخش سازنده */
+        .creator-section-medical {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+            margin-top: 100px;
+        }
+
+        .creator-section-medical::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20, 184, 166, 0.2) 0%, transparent 50%);
+        }
+
+        .creator-card-medical {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            border-radius: var(--radius-2xl);
+            padding: 70px;
+            max-width: 900px;
+            margin: 0 auto;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .creator-avatar-medical {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 35px;
+            border-radius: 50%;
+            background: var(--gradient-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: 900;
+            border: 10px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            animation: floatMedical 8s ease-in-out infinite;
+        }
+
+        .creator-avatar-medical::before {
+            content: '⚕️';
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.3;
+            animation: rotateMedical 20s linear infinite;
+        }
+
+        .creator-name-medical {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* فوتر پزشکی */
+        .medical-footer {
+            background: var(--medical-dark);
+            color: white;
+            padding-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .medical-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-medical);
+        }
+
+        .footer-content-medical {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        .footer-section-medical h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #7dd3fc;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .medical-copyright {
+            text-align: center;
+            padding: 35px 0;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        /* واکنش‌گرایی */
+        @media (max-width: 1200px) {
+            .medical-title {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .medical-nav-menu {
+                display: none;
+            }
+            
+            .medical-title {
+                font-size: 2.8rem;
+            }
+            
+            .creator-card-medical {
+                padding: 50px 35px;
+            }
+            
+            .creator-name-medical {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .medical-title {
+                font-size: 2.2rem;
+            }
+            
+            .medical-search-card {
+                padding: 35px 25px;
+            }
+            
+            .doctor-emoji-avatar {
+                width: 120px;
+                height: 120px;
+                font-size: 4.5rem;
+            }
+            
+            .creator-avatar-medical {
+                width: 140px;
+                height: 140px;
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ناوبری -->
+    <nav class="medical-navbar">
+        <div class="container nav-container">
+            <a href="#" class="medical-logo">
+                <div class="logo-icon-medical">
+                    🫀
+                </div>
+                <div class="logo-text-medical">
+                    <h1>سامانه سلامت صبا</h1>
+                    <span>نوبت دهی هوشمند پزشکان</span>
+                </div>
+            </a>
+            
+            <ul class="medical-nav-menu">
+                <li class="nav-item-medical"><a href="#home" class="nav-link-medical"><span class="emoji">🏠</span> خانه</a></li>
+                <li class="nav-item-medical"><a href="#doctors" class="nav-link-medical"><span class="emoji">👨‍⚕️</span> پزشکان</a></li>
+                <li class="nav-item-medical"><a href="#why" class="nav-link-medical"><span class="emoji">⭐</span> چرا ما؟</a></li>
+                <li class="nav-item-medical"><a href="#creator" class="nav-link-medical"><span class="emoji">👩‍💻</span> سازنده</a></li>
+                <li class="nav-item-medical"><a href="#booking" class="nav-link-medical nav-cta-medical"><span class="emoji">📅</span> نوبت‌گیری</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- هیرو -->
+    <section id="home" class="medical-hero">
+        <div class="medical-hero-bg"></div>
+        <div class="medical-floating-elements">
+            <div class="floating-element element-1">🫀</div>
+            <div class="floating-element element-2">🫁</div>
+            <div class="floating-element element-3">🧠</div>
+            <div class="floating-element element-4">🦴</div>
+            <div class="floating-element element-5">🦷</div>
+            <div class="floating-element element-6">👁️</div>
+            <div class="floating-element element-7">👂</div>
+        </div>
+        
+        <div class="container">
+            <div class="medical-hero-content">
+                <span class="medical-badge">
+                    <span class="emoji">🏥</span> پیشرفته‌ترین سامانه پزشکی ایران
+                </span>
+                
+                <h1 class="medical-title">
+                    <span class="emoji-large">🫀</span>
+                    سلامت شما
+                    <span class="emoji-large">🫁</span>
+                    <br>اولویت ماست
+                </h1>
+                
+                <p class="medical-subtitle">
+                    با سامانه هوشمند سلامت صبا، بهترین پزشکان متخصص را پیدا کنید
+                    <span class="emoji">👨‍⚕️</span> و در کمتر از ۲ دقیقه نوبت آنلاین بگیرید
+                    <span class="emoji">📱</span>
+                </p>
+                
+                <div class="medical-search-card">
+                    <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 20px;">
+                        <div style="position: relative;">
+                            <i class="fas fa-search search-icon-medical"></i>
+                            <input type="text" class="search-input-medical" placeholder="نام پزشک، تخصص یا بیماری...">
+                        </div>
+                        <button class="btn-medical btn-primary-medical">
+                            <span class="emoji">🔍</span> جستجو
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- بخش چرا سامانه سلامت صبا؟ -->
+    <section id="why" class="why-choose-us">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 3.2rem; font-weight: 900; margin-bottom: 20px; background: var(--gradient-medical); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                    <span class="emoji">⭐</span> چرا سامانه سلامت صبا؟
+                    <span class="emoji">⭐</span>
+                </h2>
+                <p style="font-size: 1.3rem; color: var(--medical-gray); max-width: 800px; margin: 0 auto;">
+                    ۷ دلیل مهم برای انتخاب ما
+                </p>
+            </div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        🚀
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        سرعت بالا
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        نوبت‌گیری در کمتر از ۲ دقیقه بدون نیاز به مراجعه حضوری
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        🔒
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        امنیت اطلاعات
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        اطلاعات شما با بالاترین سطح امنیتی رمزنگاری می‌شود
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        🏆
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        پزشکان برتر
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        دسترسی به بهترین پزشکان متخصص با بالاترین رتبه
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        💰
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        قیمت مناسب
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        هزینه ویزیت‌های شفاف و رقابتی با کیفیت عالی
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        📱
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        دسترسی آسان
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        استفاده راحت از هر دستگاهی (موبایل، تبلت، کامپیوتر)
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        🕒
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        ۲۴/۷ پشتیبانی
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        تیم پشتیبانی همیشه در کنار شما برای پاسخگویی
+                    </p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        💎
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--medical-dark);">
+                        کیفیت خدمات
+                    </h3>
+                    <p style="color: var(--medical-gray); line-height: 1.8;">
+                        ارائه خدمات با بالاترین استانداردهای پزشکی
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- پزشکان -->
+    <section id="doctors" class="container" style="padding: 100px 0;">
+        <div style="text-align: center; margin-bottom: 80px;">
+            <h2 style="font-size: 3.2rem; font-weight: 900; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <span class="emoji">👨‍⚕️</span> پزشکان متخصص ما
+                <span class="emoji">👩‍⚕️</span>
+            </h2>
+            <p style="font-size: 1.3rem; color: var(--medical-gray); max-width: 800px; margin: 0 auto;">
+                از بین برترین پزشکان کشور با بالاترین رتبه‌ها انتخاب کنید
+                <span class="emoji">⭐</span>
+            </p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 35px;">
+            <!-- دکتر قلب -->
+            <div class="medical-doctor-card">
+                <div class="doctor-header-medical">
+                    <span class="doctor-badge-medical">
+                        <span class="emoji">🫀</span> متخصص قلب
+                    </span>
+                    <div class="doctor-emoji-avatar animate-heartbeat">
+                        🫀
+                    </div>
+                    <div class="status-medical status-online"></div>
+                </div>
+                <div class="doctor-info-medical">
+                    <h3 class="doctor-name-medical">
+                        <span class="emoji">👩‍⚕️</span> دکتر کیارش مفاخری
+                    </h3>
+                    <p class="specialty-medical">
+                        <span class="emoji">🫀</span> متخصص قلب و عروق
+                    </p>
+                    
+                    <div class="rating-medical">
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span style="color: var(--medical-gray); margin-right: 15px; font-weight: 600;">۵.۰</span>
+                    </div>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📍</span> تهران، خیابان ولیعصر
+                    </p>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📞</span> ۰۲۱-۱۲۳۴۵۶۷۸
+                    </p>
+                    
+                    <div class="doctor-price-medical">
+                        <span class="emoji">💰</span> ۱۵۰,۰۰۰ تومان
+                    </div>
+                    
+                    <button class="btn-medical btn-primary-medical" onclick="bookDoctor('دکتر سارا محمدی')" style="width: 100%;">
+                        <span class="emoji">📅</span> رزرو نوبت
+                    </button>
+                </div>
+            </div>
+            
+            <!-- دکتر مغز -->
+            <div class="medical-doctor-card">
+                <div class="doctor-header-medical">
+                    <span class="doctor-badge-medical">
+                        <span class="emoji">🧠</span> متخصص مغز
+                    </span>
+                    <div class="doctor-emoji-avatar animate-pulse">
+                        🧠
+                    </div>
+                    <div class="status-medical status-online"></div>
+                </div>
+                <div class="doctor-info-medical">
+                    <h3 class="doctor-name-medical">
+                        <span class="emoji">👨‍⚕️</span> دکتر آوینا گلباز
+                    </h3>
+                    <p class="specialty-medical">
+                        <span class="emoji">🧠</span> متخصص مغز و اعصاب
+                    </p>
+                    
+                    <div class="rating-medical">
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span style="color: var(--medical-gray); margin-right: 15px; font-weight: 600;">۵.۰</span>
+                    </div>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📍</span> اصفهان، خیابان چهارباغ
+                    </p>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📞</span> ۰۲۱-۸۷۶۵۴۳۲۱
+                    </p>
+                    
+                    <div class="doctor-price-medical">
+                        <span class="emoji">💰</span> ۲۰۰,۰۰۰ تومان
+                    </div>
+                    
+                    <button class="btn-medical btn-primary-medical" onclick="bookDoctor('دکتر رضا کریمی')" style="width: 100%;">
+                        <span class="emoji">📅</span> رزرو نوبت
+                    </button>
+                </div>
+            </div>
+            
+            <!-- دکتر ریه -->
+            <div class="medical-doctor-card">
+                <div class="doctor-header-medical">
+                    <span class="doctor-badge-medical">
+                        <span class="emoji">🫁</span> متخصص ریه
+                    </span>
+                    <div class="doctor-emoji-avatar animate-float">
+                        🫁
+                    </div>
+                    <div class="status-medical status-busy"></div>
+                </div>
+                <div class="doctor-info-medical">
+                    <h3 class="doctor-name-medical">
+                        <span class="emoji">👩‍⚕️</span> دکتر صبا مفاخری
+                    </h3>
+                    <p class="specialty-medical">
+                        <span class="emoji">🫁</span> متخصص ریه و تنفس
+                    </p>
+                    
+                    <div class="rating-medical">
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span style="color: var(--medical-gray); margin-right: 15px; font-weight: 600;">۴.۹</span>
+                    </div>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📍</span> شیراز، بلوار مدرس
+                    </p>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📞</span> ۰۲۱-۵۵۵۵۶۶۶۶
+                    </p>
+                    
+                    <div class="doctor-price-medical">
+                        <span class="emoji">💰</span> ۱۲۰,۰۰۰ تومان
+                    </div>
+                    
+                    <button class="btn-medical btn-primary-medical" onclick="bookDoctor('دکتر فاطمه احمدی')" style="width: 100%;">
+                        <span class="emoji">📅</span> رزرو نوبت
+                    </button>
+                </div>
+            </div>
+            
+            <!-- دکتر استخوان -->
+            <div class="medical-doctor-card">
+                <div class="doctor-header-medical">
+                    <span class="doctor-badge-medical">
+                        <span class="emoji">🦴</span> متخصص ارتوپد
+                    </span>
+                    <div class="doctor-emoji-avatar">
+                        🦴
+                    </div>
+                    <div class="status-medical status-online"></div>
+                </div>
+                <div class="doctor-info-medical">
+                    <h3 class="doctor-name-medical">
+                        <span class="emoji">👨‍⚕️</span> دکتر علی خانی
+                    </h3>
+                    <p class="specialty-medical">
+                        <span class="emoji">🦴</span> متخصص استخوان و مفاصل
+                    </p>
+                    
+                    <div class="rating-medical">
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span style="color: var(--medical-gray); margin-right: 15px; font-weight: 600;">۴.۸</span>
+                    </div>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📍</span> مشهد، بلوار وکیل‌آباد
+                    </p>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📞</span> ۰۲۱-۴۴۴۳۳۲۲۱
+                    </p>
+                    
+                    <div class="doctor-price-medical">
+                        <span class="emoji">💰</span> ۱۸۰,۰۰۰ تومان
+                    </div>
+                    
+                    <button class="btn-medical btn-primary-medical" onclick="bookDoctor('دکتر علی رضایی')" style="width: 100%;">
+                        <span class="emoji">📅</span> رزرو نوبت
+                    </button>
+                </div>
+            </div>
+            
+            <!-- دکتر دندان -->
+            <div class="medical-doctor-card">
+                <div class="doctor-header-medical">
+                    <span class="doctor-badge-medical">
+                        <span class="emoji">🦷</span> دندان‌پزشک
+                    </span>
+                    <div class="doctor-emoji-avatar">
+                        🦷
+                    </div>
+                    <div class="status-medical status-online"></div>
+                </div>
+                <div class="doctor-info-medical">
+                    <h3 class="doctor-name-medical">
+                        <span class="emoji">👩‍⚕️</span> دکتر آریهان گلباز
+                    </h3>
+                    <p class="specialty-medical">
+                        <span class="emoji">🦷</span> متخصص دندان‌پزشکی
+                    </p>
+                    
+                    <div class="rating-medical">
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span style="color: var(--medical-gray); margin-right: 15px; font-weight: 600;">۴.۹</span>
+                    </div>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📍</span> تبریز، خیابان امام
+                    </p>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📞</span> ۰۲۱-۹۹۹۸۸۸۷۷
+                    </p>
+                    
+                    <div class="doctor-price-medical">
+                        <span class="emoji">💰</span> ۱۳۰,۰۰۰ تومان
+                    </div>
+                    
+                    <button class="btn-medical btn-primary-medical" onclick="bookDoctor('دکتر مریم حسینی')" style="width: 100%;">
+                        <span class="emoji">📅</span> رزرو نوبت
+                    </button>
+                </div>
+            </div>
+            
+            <!-- دکتر چشم -->
+            <div class="medical-doctor-card">
+                <div class="doctor-header-medical">
+                    <span class="doctor-badge-medical">
+                        <span class="emoji">👁️</span> چشم‌پزشک
+                    </span>
+                    <div class="doctor-emoji-avatar">
+                        👁️
+                    </div>
+                    <div class="status-medical status-online"></div>
+                </div>
+                <div class="doctor-info-medical">
+                    <h3 class="doctor-name-medical">
+                        <span class="emoji">👨‍⚕️</span> دکتر محمد نوروزی
+                    </h3>
+                    <p class="specialty-medical">
+                        <span class="emoji">👁️</span> متخصص چشم‌پزشکی
+                    </p>
+                    
+                    <div class="rating-medical">
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span class="emoji">⭐</span>
+                        <span style="color: var(--medical-gray); margin-right: 15px; font-weight: 600;">۴.۷</span>
+                    </div>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📍</span> کرج، میدان امام
+                    </p>
+                    
+                    <p class="doctor-meta-medical">
+                        <span class="emoji">📞</span> ۰۲۱-۷۷۷۶۶۵۵۴
+                    </p>
+                    
+                    <div class="doctor-price-medical">
+                        <span class="emoji">💰</span> ۱۶۰,۰۰۰ تومان
+                    </div>
+                    
+                    <button class="btn-medical btn-primary-medical" onclick="bookDoctor('دکتر محمد نوروزی')" style="width: 100%;">
+                        <span class="emoji">📅</span> رزرو نوبت
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- سازنده -->
+    <section id="creator" class="creator-section-medical">
+        <div class="container">
+            <div class="creator-card-medical">
+                <div style="text-align: center;">
+                    <div class="creator-avatar-medical">SM</div>
+                    <h1 class="creator-name-medical">
+                        <span class="emoji">👩‍💻</span>
+                        صبا مفاخری
+                        <span class="emoji">⚕️</span>
+                    </h1>
+                    <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 40px;">
+                        <span class="emoji">💻</span> طراح و توسعه‌دهنده ارشد سامانه سلامت صبا
+                        <span class="emoji">🎨</span>
+                    </p>
+                    
+                    <div style="max-width: 700px; margin: 0 auto;">
+                        <p style="font-size: 1.1rem; line-height: 1.9; color: rgba(255, 255, 255, 0.8); margin-bottom: 40px;">
+                            <span class="emoji">🫀</span> طراحی و توسعه این سامانه با استفاده از آخرین تکنولوژی‌های روز دنیا انجام شده است.
+                            <span class="emoji">🧠</span> تمرکز بر UX/UI حرفه‌ای، عملکرد بهینه و امنیت بالا از ویژگی‌های اصلی این پروژه می‌باشد.
+                            <span class="emoji">🫁</span>
+                        </p>
+                        
+                        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-top: 50px;">
+                            <span style="background: rgba(255, 255, 255, 0.15); padding: 15px 30px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 12px; font-weight: 600; color: white; border: 2px solid rgba(255, 255, 255, 0.1);">
+                                <span class="emoji">⚛️</span> React.js
+                            </span>
+                            <span style="background: rgba(255, 255, 255, 0.15); padding: 15px 30px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 12px; font-weight: 600; color: white; border: 2px solid rgba(255, 255, 255, 0.1);">
+                                <span class="emoji">🟢</span> Node.js
+                            </span>
+                            <span style="background: rgba(255, 255, 255, 0.15); padding: 15px 30px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 12px; font-weight: 600; color: white; border: 2px solid rgba(255, 255, 255, 0.1);">
+                                <span class="emoji">🗄️</span> MongoDB
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- فوتر -->
+    <footer class="medical-footer">
+        <div class="container">
+            <div class="footer-content-medical">
+                <div class="footer-section-medical">
+                    <h3><span class="emoji">🏥</span> سامانه سلامت صبا</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; margin-top: 15px;">
+                        <span class="emoji">🫀</span> پیشرفته‌ترین سامانه نوبت‌دهی آنلاین پزشکان متخصص
+                        <span class="emoji">🫁</span>
+                    </p>
+                </div>
+                
+                <div class="footer-section-medical">
+                    <h3><span class="emoji">📞</span> تماس با ما</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 15px;">
+                        <span class="emoji">📱</span> 09120733607
+
+                        <span class="emoji">📧</span> sabamafakheri866@gmail.com
+                    </p>
+                </div>
+                
+                <div class="footer-section-medical">
+                    <h3><span class="emoji">👩‍💻</span> طراحی و توسعه</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 15px;">
+                        <strong style="color: #7dd3fc;">صبا مفاخری</strong>
+                        <span class="emoji">🎨</span><br>
+                        Full Stack Developer<br>
+                        Medical UI/UX Specialist
+                        <span class="emoji">⚕️</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="medical-copyright">
+                <p>
+                    <span class="emoji">©️</span> ۱۴۰۳ - تمامی حقوق برای 
+                    <strong style="color: #7dd3fc;">سامانه سلامت صبا</strong> 
+                    محفوظ است <span class="emoji">🫀</span>
+                </p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">
+                    <span class="emoji">👩‍💻</span> طراحی و توسعه: صبا مفاخری 
+                    <span class="emoji">|</span> نسخه ۴.۰ 
+                    <span class="emoji">🏥</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // رزرو نوبت
+        function bookDoctor(name) {
+            alert(`🫀 نوبت ${name} با موفقیت ثبت شد!\n\nلطفاً اطلاعات تماس خود را برای تأیید نوبت آماده کنید.`);
+        }
+
+        // جستجو
+        document.querySelector('.btn-primary-medical').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-input-medical').value;
+            if (searchTerm) {
+                alert(`🔍 در حال جستجو برای: "${searchTerm}"\n\nنتایج جستجو نمایش داده خواهند شد.`);
+            } else {
+                alert('⚠️ لطفاً اطلاعات جستجو را وارد کنید.');
+            }
+        });
+
+        // انیمیشن شکلک‌ها
+        const emojis = document.querySelectorAll('.emoji');
+        emojis.forEach(emoji => {
+            emoji.style.display = 'inline-block';
+        });
+
+        // تغییر استایل ناوبری
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.medical-navbar');
+            if (window.scrollY > 100) {
+                navbar.style.boxShadow = 'var(--shadow-xl)';
+                navbar.style.background = 'rgba(255, 255, 255, 0.99)';
+            } else {
+                navbar.style.boxShadow = 'var(--shadow-lg)';
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            }
+        });
+
+        // پیام خوش آمدگویی
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                console.log('🏥 سامانه سلامت صبا با موفقیت بارگذاری شد!');
+                console.log('🫀 طراحی پزشکی تخصصی با شکلک‌های بدن انسان');
+                console.log('⭐ بخش "چرا ما؟" با ۷ دلیل مهم');
+                console.log('👨‍⚕️ نسخه: ۴.۰ - Ultimate Medical Edition');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
